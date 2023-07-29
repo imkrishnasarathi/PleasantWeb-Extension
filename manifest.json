@@ -9,7 +9,7 @@
         "default_popup": "index.html",
         "default_title": "WebContentAlerts"
     },
-    "permissions": ["tabs", "activeTab"],
+    "permissions": ["tabs", "activeTab", "webNavigation"],
     "manifest_version": 3,
     "author": "Krishna Sarathi Ghosh"
 }
