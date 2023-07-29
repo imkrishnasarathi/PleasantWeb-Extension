@@ -1,0 +1,14 @@
+{
+    "name": "WebContentAlerts",
+    "version": "1.0.0",
+    "description": "This extension provides awareness about the content within the web page. If the browsing website contains any inappropriate content, the extension will notify the user. This is a school project.",
+    "background": {
+        "service_worker": "wca_background.js"
+    },
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "WebContentAlerts"
+    },
+    "manifest_version": 3,
+    "author": "Krishna Sarathi Ghosh"
+}
