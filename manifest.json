@@ -9,7 +9,17 @@
         "default_popup": "index.html",
         "default_title": "WebContentAlerts"
     },
-    "permissions": ["tabs", "activeTab", "webNavigation"],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "/content_script.js"
+            ]
+        }
+    ],
+    "permissions": ["tabs", "activeTab", "webNavigation", "scripting", "storage"],
     "manifest_version": 3,
     "author": "Krishna Sarathi Ghosh"
 }

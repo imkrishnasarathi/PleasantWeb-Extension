@@ -3,12 +3,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         processImage(tab.url);
     }
     else{
-      // Get the text content from the web page body
-      // send to api to read inappropriate content
+       if (tab.status === "complete") {
+        // console.log(document.readyState());
+       }
     }
 });
 
-async function processImage(url){
+/* async function processImage(url){
     const apiKey = 'dc87e022d70c4af8bbea457c78cdd84f';
     try{
         const result  = await fetch('https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs', {
@@ -48,9 +49,9 @@ async function processImage(url){
     catch (err) {
         console.log("Error :" + err)
     }
-}
+} */
 
-async function analyzeContent(content){
+/* async function analyzeContent(content){
     const api = "AIzaSyCHjwjNwyaa-GXk3dU_lCbvta36TDkxImg";
 
     const response = await fetch(`https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=${api}`, {
@@ -81,4 +82,4 @@ async function analyzeContent(content){
       console.warn(`Content contains potentially harmful attribute: ${attr}. Score: ${score}`);
     }
   }
-}
+} */
