@@ -1,13 +1,13 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (tab.url.includes(".jpg") || tab.url.includes(".png") || tab.url.includes(".jpeg") || tab.url.includes(".webp")) {
-        processImage(tab.url);
-    }
-    else{
-       if (tab.status === "complete") {
-        // console.log(document.readyState());
-       }
-    }
-});
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     if (tab.url.includes(".jpg") || tab.url.includes(".png") || tab.url.includes(".jpeg") || tab.url.includes(".webp")) {
+//         processImage(tab.url);
+//     }
+//     else{
+//        if (tab.status === "complete") {
+//         // console.log(document.readyState());
+//        }
+//     }
+// });
 
 /* async function processImage(url){
     const apiKey = 'dc87e022d70c4af8bbea457c78cdd84f';

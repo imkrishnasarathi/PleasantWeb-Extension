@@ -1,13 +1,22 @@
-console.log(document.body.innerText);
-
-document.onload(() => {
+window.onload = () => {
     const url = document.URL;
-    if (["jpg", "png", "jpeg", "webp"].includes(url)){
-        processImage(url).then(() => {
-            console.log("done");
+    if ([".jpg", ".png", ".jpeg", ".webp"].filter(ext=> url.includes(ext)).length){
+        processImage(url).then((data) => {
+            // console.log(data);
+            const jsonData = JSON.stringify(data, null, 2);
+            new File ([jsonData], 'data.json', { type: 'application/json' });
         });
     }
-})
+    else{
+      const content = document.body.innerText;
+      analyzeContent(content).then((data) => {
+        // console.log(data.isContentInappropriate, data.averageScore);
+      })
+      .catch((err) => {
+        console.error(err);
+      });   
+    }
+};
 
 async function analyzeContent(content){
     const api = "AIzaSyCHjwjNwyaa-GXk3dU_lCbvta36TDkxImg";
@@ -33,13 +42,19 @@ async function analyzeContent(content){
   });
 
   const result = await response.json();
+  const allScores = [];
+  let isContentInappropriate = false;
 
   for (const attr in result.attributeScores) {
     const score = result.attributeScores[attr].summaryScore.value;
     if (score > 0.45) {
-      console.warn(`Content contains potentially harmful attribute: ${attr}. Score: ${score}`);
+    // console.warn(`Content contains potentially harmful attribute: ${attr}. Score: ${score}`);
+      isContentInappropriate = true;
     }
+    allScores.push(score);
   }
+  let averageScore = allScores.reduce((a, b) => a + b, 0) / allScores.length;
+  return { averageScore, isContentInappropriate };
 }
 
 async function processImage(url){
@@ -64,25 +79,27 @@ async function processImage(url){
             }),
         });
         const info = await result.json();
-        console.log('Clarifai API Response:', info)
-        console.log('Outputs:', info.outputs);
+        // console.log('Clarifai API Response:', info)
         try{
+            let analyzedContent = {};
             if (info.outputs && info.outputs.length > 0) {
                 const recognitionResults = info.outputs[0].data;
-                console.log('Recognition Results:', recognitionResults);
-                analyzeContent(`${recognitionResults["concepts"][0].name} ${recognitionResults["concepts"][1].name} ${recognitionResults["concepts"][2].name}`);
+                // console.log('Recognition Results:', recognitionResults);
+                
+                analyzedContent = await analyzeContent(`${recognitionResults["concepts"][0].name} ${recognitionResults["concepts"][1].name} ${recognitionResults["concepts"][2].name}`);
+                
           } else {
-                console.log('No recognition results found.');
+                // console.log('No recognition results found.');
           }
-          return true;
+          return analyzedContent;
         }
         catch (err) {
-          console.error('Error processing the image:', err);
+          console.error(err);
           return false;
         }
     }
     catch (err) {
-        console.log("Error :" + err)
+        console.error(err)
         return false;
     }
 }
