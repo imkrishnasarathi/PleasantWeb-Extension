@@ -9,6 +9,10 @@
         "default_popup": "index.html",
         "default_title": "WebContentAlerts"
     },
+    "icons": {
+        "128": "/assets/logo128.png",
+        "512": "/assets/logo512.png"
+    },
     "content_scripts": [
         {
             "matches": [

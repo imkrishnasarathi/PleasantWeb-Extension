@@ -1,22 +1,67 @@
+// window.onload = () => {
+//     const url = document.URL;
+//     if ([".jpg", ".png", ".jpeg", ".webp"].filter(ext=> url.includes(ext)).length){
+//         processImage(url).then((data) => {
+//             // console.log(data);
+//             let dataToStore = {
+//                 date: new Date().toUTCString(),
+//                 score: data.averageScore,
+//                 status: data.isContentInappropriate? "Inappropriate" : "Not Inappropriate",
+//                 url
+//             };
+//             chrome.runtime.sendMessage({ target: "setStorageData", data: dataToStore });
+//         });
+//     }
+//     else{
+//       const content = document.body.innerText;
+//       analyzeContent(content).then((data) => {
+//         // console.log(data.isContentInappropriate, data.averageScore);
+//         // console.log(data);
+//         let dataToStore = {
+//             date: new Date().toUTCString(),
+//             score: data.averageScore,
+//             status: data.isContentInappropriate? "Inappropriate" : "Not Inappropriate",
+//             url
+//         };
+//         chrome.runtime.sendMessage({ target: "setStorageData", data: dataToStore });
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//       });   
+//     }
+// };
+
 window.onload = () => {
-    const url = document.URL;
-    if ([".jpg", ".png", ".jpeg", ".webp"].filter(ext=> url.includes(ext)).length){
-        processImage(url).then((data) => {
-            // console.log(data);
-            const jsonData = JSON.stringify(data, null, 2);
-            new File ([jsonData], 'data.json', { type: 'application/json' });
-        });
-    }
-    else{
-      const content = document.body.innerText;
-      analyzeContent(content).then((data) => {
-        // console.log(data.isContentInappropriate, data.averageScore);
-      })
-      .catch((err) => {
-        console.error(err);
-      });   
-    }
-};
+  analyzeAndStoreData();
+}
+
+function setStorageData(data) {
+  chrome.runtime.sendMessage({ target: "setStorageData", data: data });
+}
+
+async function analyzeAndStoreData() {
+  const url = document.URL;
+  let dataToStore = {};
+  if ([".jpg", ".png", ".jpeg", ".webp"].some(ext => url.includes(ext))) {
+    const data = await processImage(url);
+    dataToStore = {
+      date: new Date().toLocaleString("en-Us", {timeZone: 'Asia/Kolkata'}),
+      score: data.averageScore,
+      status: data.isContentInappropriate ? "Inappropriate" : "Not Inappropriate",
+      url
+    };
+  } else {
+    const content = document.body.innerText;
+    const data = await analyzeContent(content);
+    dataToStore = {
+      date: new Date().toLocaleString("en-Us", {timeZone: 'Asia/Kolkata'}),
+      score: data.averageScore,
+      status: data.isContentInappropriate ? "Inappropriate" : "Not Inappropriate",
+      url
+    };
+  }
+  setStorageData(dataToStore);
+}
 
 async function analyzeContent(content){
     const api = "AIzaSyCHjwjNwyaa-GXk3dU_lCbvta36TDkxImg";
@@ -84,12 +129,12 @@ async function processImage(url){
             let analyzedContent = {};
             if (info.outputs && info.outputs.length > 0) {
                 const recognitionResults = info.outputs[0].data;
-                // console.log('Recognition Results:', recognitionResults);
+                console.log('Recognition Results:', recognitionResults);
                 
                 analyzedContent = await analyzeContent(`${recognitionResults["concepts"][0].name} ${recognitionResults["concepts"][1].name} ${recognitionResults["concepts"][2].name}`);
                 
           } else {
-                // console.log('No recognition results found.');
+                console.log('No recognition results found.');
           }
           return analyzedContent;
         }
