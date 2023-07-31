@@ -1,36 +1,3 @@
-// window.onload = () => {
-//     const url = document.URL;
-//     if ([".jpg", ".png", ".jpeg", ".webp"].filter(ext=> url.includes(ext)).length){
-//         processImage(url).then((data) => {
-//             // console.log(data);
-//             let dataToStore = {
-//                 date: new Date().toUTCString(),
-//                 score: data.averageScore,
-//                 status: data.isContentInappropriate? "Inappropriate" : "Not Inappropriate",
-//                 url
-//             };
-//             chrome.runtime.sendMessage({ target: "setStorageData", data: dataToStore });
-//         });
-//     }
-//     else{
-//       const content = document.body.innerText;
-//       analyzeContent(content).then((data) => {
-//         // console.log(data.isContentInappropriate, data.averageScore);
-//         // console.log(data);
-//         let dataToStore = {
-//             date: new Date().toUTCString(),
-//             score: data.averageScore,
-//             status: data.isContentInappropriate? "Inappropriate" : "Not Inappropriate",
-//             url
-//         };
-//         chrome.runtime.sendMessage({ target: "setStorageData", data: dataToStore });
-//       })
-//       .catch((err) => {
-//         console.error(err);
-//       });   
-//     }
-// };
-
 window.onload = () => {
   analyzeAndStoreData();
 }
