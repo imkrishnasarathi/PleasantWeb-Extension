@@ -25,9 +25,37 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendResponse([]);
       });
       break;
+    case "setTheme":
+      setTheme(message.theme)
   }
   return true; // Make sure to explicitly return true to indicate asynchronous response.
 });
+
+async function setTheme(info) {
+  getTheme().then(storedData => {
+        storedData = info;
+        chrome.storage.local.set({ theme: JSON.stringify(storedData) });
+      }).catch(error => {
+        console.error(error);
+      });
+}
+
+async function getTheme(){
+  try{
+    const data = await new Promise((resolve, reject) => {
+      chrome.storage.local.get(["theme"], function (result) {
+        resolve(JSON.parse(result.theme || "[]"));
+      });
+    })
+    return data;
+  }
+  catch (error){
+    console.error(error);
+    return [];
+  }
+
+
+}
 
 function setStorageData(data) {
   getStorageData().then(storedData => {
