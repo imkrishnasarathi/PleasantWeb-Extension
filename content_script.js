@@ -31,7 +31,7 @@ async function analyzeAndStoreData() {
 }
 
 async function analyzeContent(content){
-    const api = "Perspective_AI_API_KEY";
+    const api = "AIzaSyCHjwjNwyaa-GXk3dU_lCbvta36TDkxImg";
 
     const response = await fetch(`https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=${api}`, {
     method: 'POST',
@@ -70,7 +70,7 @@ async function analyzeContent(content){
 }
 
 async function processImage(url){
-    const apiKey = 'CLARIFAI_API_KEY';
+    const apiKey = 'dc87e022d70c4af8bbea457c78cdd84f';
     try{
         const result  = await fetch('https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs', {
             method: 'POST',
